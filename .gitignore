@@ -1,0 +1,5 @@
+.env/
+**/.*/
+**/archived
+**/.rbcsignore
+misc
