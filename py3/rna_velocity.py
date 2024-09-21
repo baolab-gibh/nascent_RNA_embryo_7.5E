@@ -6,6 +6,7 @@
 # Updated: Aug 06, 2024
 
 import warnings
+from itertools import combinations
 from pathlib import Path
 
 # matplotlib: version 3.5.3, matplotlib may raise errors due to depreciation of register_cmap()
@@ -94,7 +95,6 @@ def calc_ntr(adata, axis=None, min_tc=10, min_nc=3, max_tc=5000, max_nc=5000, us
     return ntr_mat.squeeze()
 
 
-
 dyn.configuration.set_figure_params('dynamo', background='black')
 dyn.configuration.set_pub_style()
 
@@ -105,7 +105,7 @@ gene_bkl = ["Gm42418", "Gm26917"]
 
 ttl_adt_list, new_adt_list, spl_adt_list = {}, {}, {}
 for per_batch in all_batches:
-    ten_x_dir = project_dir / "outputs/analysis/preprocessing/quantification" / per_batch / "slamseq/10X"
+    ten_x_dir = project_dir / "outputs/analysis/preprocessing/geo_seq/quantification" / per_batch / "slamseq/10X"
     new_ad, ttl_ad = scp.read_10x_mtx(ten_x_dir / "new"), scp.read_10x_mtx(ten_x_dir / "total")
     new_ad = new_ad[:, new_ad.var.gene_ids.drop_duplicates()]
     ttl_ad = ttl_ad[:, ttl_ad.var.gene_ids.drop_duplicates()]
@@ -116,7 +116,7 @@ for per_batch in all_batches:
     ttl_adt_list[per_batch] = ttl_ad
     new_adt_list[per_batch] = new_ad
 
-    spl_dir = project_dir / "outputs/analysis/preprocessing/velocity_counts" / per_batch / "velocyto"
+    spl_dir = project_dir / "outputs/analysis/preprocessing/geo_seq/velocity_counts" / per_batch / "velocyto"
     spl_ad = dyn.read_loom(spl_dir / "one_file_per_cell.velocyto_run.loom")
     spl_ad.obs["Batches"] = per_batch
     spl_ad.obs.index = [x[1] for x in spl_ad.obs.index.str.split("[:.]")]
@@ -167,22 +167,101 @@ for per_cat in ["new", "total"]:
     scp.pp.neighbors(tmp_adata, n_pcs=10)
     scp.tl.umap(tmp_adata)
     scp.tl.dendrogram(tmp_adata, groupby="Cell_types")
-    scp.tl.rank_genes_groups(tmp_adata, groupby="Cell_types", method="wilcoxon")
-    
+    scp.tl.rank_genes_groups(tmp_adata, groupby="Cell_types", method="wilcoxon", key_added="One_vs_rest")
+
     adata_dict[per_cat] = tmp_adata
 
 total_adata, nascent_adata = adata_dict["total"], adata_dict["new"]
-fig = plt.figure(figsize=(9, 8))
-axe1, axe2, axe3, axe4 = plt.subplot(321), plt.subplot(322), plt.subplot(312), plt.subplot(313)
+
+def fetch_group_degs(adata, group_by, top_n=10, top_by="logfoldchanges", min_logfc=1, max_pval_adj=0.05, **kwargs) -> pl.DataFrame:
+    '''Fetch marker genes for each comparison'''
+    group_name = adata.obs[group_by].unique().tolist()
+    deg_tab_list = []
+    for per_group in group_name:
+        refer_names = [x for x in group_name if x != per_group]
+        for per_refer in refer_names:
+            tmp_adata = scp.tl.rank_genes_groups(adata, groupby=group_by, groups=[per_group], reference=per_refer, copy=True, **kwargs)
+            deg_tab = (
+                pl.DataFrame(scp.get.rank_genes_groups_df(tmp_adata, per_group, key="rank_genes_groups"))
+                .with_columns(pl.lit(per_group).alias("query_group"), pl.lit(per_refer).alias("reference_group"))
+            )
+
+            deg_tab_list.append(deg_tab)
+
+    deg_tab_all = (
+        pl.concat(deg_tab_list, how="vertical")
+        .filter(pl.col("pvals_adj") < max_pval_adj, pl.col("logfoldchanges").abs() > min_logfc)
+        .with_columns(pl.col(top_by).neg().rank().over("query_group", "reference_group").alias("rank"))
+        .sort("reference_group", "rank", maintain_order=True)
+    )
+
+    return deg_tab_all
+
+deg_tab = fetch_group_degs(total_adata, "Cell_types")
+deg_tab.with_columns(pl.col("scores").rank().over("comparison").alias("rank"))
+
+total_adata.obsm["X_corn"] = labeled_adata.obsm["X_corn"]
+nascent_adata.obsm["X_corn"] = labeled_adata.obsm["X_corn"]
+
+# UMAP by total and nascent RNA
+umap_axe_kwargs = dict(frameon=False, edgecolor="0.5", legend_loc="on data", palette="Set2", show=False, size=300, color="Cell_types")
+matrixplot_axe_kwargs = dict(var_group_rotation=0.5, show=False, n_genes=15, cmap="Spectral_r")
+
+fig = plt.figure(figsize=(8, 10))
+axe1, axe2, axe3, axe4 = plt.subplot(421), plt.subplot(422), plt.subplot(412), plt.subplot(413)
 with mpl.rc_context({"font.size": 8}):
-    _ = scp.pl.umap(total_adata, color="Cell_types", title="UMAP by total RNA", size=200, edgecolor="0.5", legend_fontoutline=2, legend_loc="on data", palette="Set2", frameon=False, ax=axe1, show=False)
-    _ = scp.pl.umap(nascent_adata, color="Cell_types", title="UMAP by new RNA", size=200, edgecolor="0.5", legend_fontoutline=2, legend_loc="on data", palette="Set2", frameon=False, ax=axe2, show=False)
-    _ = scp.pl.rank_genes_groups_dotplot(total_adata, groupby="Cell_types", standard_scale="var", n_genes=10, ax=axe3, show=False)
-    _ = scp.pl.rank_genes_groups_dotplot(nascent_adata, groupby="Cell_types", standard_scale="var", n_genes=10, var_group_rotation=0.5, ax=axe4, show=False)
-plt.subplots_adjust(hspace=-0.15, wspace=0.1, left=0.075)
-fig.savefig(project_dir / "outputs/analysis/velocity" / version / "scanpy.total_and_new.umap.pdf")
+    _ = scp.pl.umap(total_adata, title="UMAP by total RNA", ax=axe1, **umap_axe_kwargs)
+    _ = scp.pl.umap(nascent_adata, title="UMAP by new RNA", ax=axe2, **umap_axe_kwargs)
+    _ = scp.pl.rank_genes_groups_matrixplot(total_adata, groupby="Regions", ax=axe3, **matrixplot_axe_kwargs)
+    _ = scp.pl.rank_genes_groups_matrixplot(nascent_adata, groupby="Regions", ax=axe4, **matrixplot_axe_kwargs)
+plt.subplots_adjust(hspace=0.2, wspace=0.1, left=0.05, right=0.95, bottom=0.1, top=0.9)
+fig.savefig(project_dir / "outputs/analysis/velocity" / version / "scanpy.total_and_new.umap_and_mark_gene.pdf")
 fig.clear()
 plt.close(fig)
+
+
+
+fig, ((axe1, axe2, axe3), (axe4, axe5, axe6)) = plt.subplots(2, 3, figsize=(12 * 0.75, 8 * 0.75), sharey=True)
+with mpl.rc_context({"font.size": 8}):
+    _ = scp.pl.rank_genes_groups_violin(total_adata, groups='Ectoderm', n_genes=20, ax=axe1)
+    _ = scp.pl.rank_genes_groups_violin(total_adata, groups='Endoderm', n_genes=20, ax=axe2)
+    _ = scp.pl.rank_genes_groups_violin(total_adata, groups='Mesoderm', n_genes=20, ax=axe3)
+    _ = scp.pl.rank_genes_groups_violin(nascent_adata, groups='Ectoderm', n_genes=20, ax=axe4)
+    _ = scp.pl.rank_genes_groups_violin(nascent_adata, groups='Endoderm', n_genes=20, ax=axe5)
+    _ = scp.pl.rank_genes_groups_violin(nascent_adata, groups='Mesoderm', n_genes=20, ax=axe6)
+    for idx, per_axe in enumerate([axe1, axe2, axe3, axe4, axe5, axe6]):
+        per_axe.set_xlabel("")
+        if idx > 2:
+            per_axe.set_ylabel("Expression (Nascent)")
+        else:
+            per_axe.set_ylabel("Expression (Total)")
+plt.subplots_adjust(hspace=0.4, wspace=0.05, left=0.05, right=0.95, bottom=0.1, top=0.9)
+fig.savefig(project_dir / "outputs/analysis/velocity" / version / "scanpy.total_and_new.violin.pdf")
+fig.clear()
+plt.close(fig)
+
+
+# Show the expression of given gene in corn plot
+tar_feature = ["Foxa1", "Dnmt3b", "Neat1", "Sox17", "Twist1", "T", "Gata6", "Gata3", "Tenm4", "Dlc1", "Smarcd3", "Foxc1", "Meis1"]
+for per_feature in tar_feature:
+    fig, (axe1, axe2) = plt.subplots(1, 2, figsize=(4, 3), layout="constrained")
+    v_min = min(total_adata[:, per_feature].X.min(), nascent_adata[:, per_feature].X.min())
+    v_max = max(total_adata[:, per_feature].X.max(), nascent_adata[:, per_feature].X.max())
+    axe_kwargs = {"basis": "X_corn", "color_map": "Spectral_r", "vmax": v_max, "vmin": v_min, "add_outline": True, "outline_width": (0.05, 0.001), "size": 500, "legend_loc": "top", "frameon": True, "show": False, "components": ("2,1")} # "vmax": 4.5, "vmin": 0.0
+
+    _ = scp.pl.embedding(total_adata, color=per_feature, title=f"Expression of {per_feature} (total)", ax=axe1, **axe_kwargs)
+    _ = scp.pl.embedding(nascent_adata, color=per_feature, title=f"Expression of {per_feature} (nascent)", ax=axe2, **axe_kwargs)
+
+    for per_axe in [axe1, axe2]:
+        per_axe.margins(0.075, 0.05)
+        per_axe.set_xlabel("")
+        per_axe.set_ylabel("")
+
+    fig.savefig(project_dir / "outputs/analysis/velocity" / version / f"scanpy.total_and_new.corn_plot.{per_feature}.pdf")
+    fig.clear()
+    plt.close(fig)
+print("--- Done ---")
+
 
 
 # Estimate the ntr ratio
@@ -249,9 +328,7 @@ grid.ax_col_dendrogram.remove()
 grid.savefig(project_dir / "outputs/analysis/velocity" / version / "in_house.new_to_total_ratio.cluster_by_pca.pdf")
 
 
-
-
-
+# NTR clustering
 gene_dist = spatial.distance.pdist(ntr_tab.values.T)
 gene_z = cluster.hierarchy.linkage(gene_dist, "ward")
 sample_dist = spatial.distance.pdist(ntr_tab.values)

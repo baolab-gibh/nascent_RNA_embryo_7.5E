@@ -77,6 +77,33 @@ elif [[ ${USER} == 'zzhang' ]]; then
 fi
 
 
+# Encoded slide-seq mouse embryo
+work_dir=${project_dir}/outputs/analysis/preprocessing/slide_seq
+smk_file=${project_dir}/scripts/snakemake/slide_seq.smk
+
+# Job graph, not able to show the DAG of modules
+snakemake --forceall -d ${work_dir} -j ${n_jobs} -s ${smk_file} --profile ${prof_dir} --rulegraph | dot -Tpdf >| ${work_dir}/preprocessing/logs/2019_peng_etal_nature.job_graph.pdf
+
+# Touch existing files
+snakemake -d ${work_dir} -j ${n_jobs} -s ${smk_file} --profile ${prof_dir} --touch
+
+# Dry-run
+snakemake -d ${work_dir} -j ${n_jobs} -s ${smk_file} --profile ${prof_dir} --dry-run >| ${work_dir}/logs/encoded_with_ploya_embryo.log
+awk '/^Job stats:$/ {count++} count >= 2 {print}' ${work_dir}/logs/encoded_with_ploya_embryo.log
+cat ${work_dir}/logs/encoded_with_ploya_embryo.log
+# less -X -S -N ${work_dir}/logs/encoded_with_ploya_embryo.log
+
+# Unlock current .snakemake folder
+snakemake -d ${work_dir} -j ${n_jobs} -s ${smk_file} --profile ${prof_dir} --unlock
+
+# Run
+if [[ ${USER} == 'zhzhang_gibh' ]]; then
+  snakemake -d ${work_dir} -j ${n_jobs} -s ${smk_file} --profile ${prof_dir}
+elif [[ ${USER} == 'zzhang' ]]; then
+  snakemake -d ${work_dir} -j ${n_jobs} -s ${smk_file}
+fi
+
+
 
 # reference_files
 star_genome_index=/public/home/zbmai_gibh/STuDY/vasa-seq-test/mm10
