@@ -1,0 +1,887 @@
+# I/O
+# Configurations to run the pipeline.smk workflow
+
+# PLEASE ENSURE YOU HAVE ENOUGH STORAGE SPACE.
+# Working directory, including sequencing data, references, containers of tools, and all outputs.
+working_dir: /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/slide_seq_decoded
+
+# Tool container
+app_image: /home/zzhang/tools/containers/images/celatlas_spatial.sif # A path to the container (apptainer/singularity)
+app_image_md5: de3bc2e83b4cbd82fce5cb2c3d40b3be
+
+# Parameters used to manipulate the pipeline
+parameters:
+    # General
+    # Genome sequence
+    genome_sequence_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/reference/genome/GRCm38.primary_assembly.genome.fa
+    genome_sequence_file_md5: 4e004c5032ade9aa37cc795890051f7c
+
+    # Genomic fetures
+    genomic_feature_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/reference/genome/gencode.vM29lift38.annotation.gtf
+    genomic_feature_file_md5: 617ab0c95cd531e86608b056d5726455
+    erna_feature_file: /home/zzhang/Documents/projects/wp_vasaseq/outputs/references/genomic_features/mus_musculus.90.wto_rRNA.overlapped_with_fantom5_and_ensembl.gtf
+    erna_feature_file_md5: eadeb57c7c02a72d81a46e1087bd0e97
+
+    # Reference
+    gedi_index_dir: /home/zzhang/Documents/projects/wp_vasaseq/inputs/reference/genome/GEDI_GRCm38
+    star_index_dir: /home/zzhang/Documents/projects/resources/references/GRCm38.celatlas_spatial
+
+    # Required outputs, will be process by RuleIO class.
+    required_outputs:
+        - normalize_fastq_name
+        - quality_control
+        - alignment
+        - spatial
+        - alignment_reports
+        - nascent_rna
+        - nascent_rna_per_treatment
+        # - quantification_erna
+        # - publication
+
+    # Slide-seq specific parameters
+    bin_size: 20
+    chemistry: BBV2.4
+    chemistry_pattern: C4L15C4L15C4U10T18
+    insert_size: 150
+    feature_type: gene
+    expected_cell_num: 3000
+    pixel_size: 0.24
+    segment_method: gene_expr
+    model_file: /opt/tools/database/celatlas_spatial/1.5.0/swin_tiny.pth # A path in the container
+    model_file_md5: f8530c9b30a0451d41a4d4b46c75f241
+
+sequencing_batches: # Sequencing batches
+    20250728_decoded_embryo:
+        information:
+        parameters:
+            control_pattern: "Pnc"
+            control_samples: []
+            external_controls: 
+                - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+                - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+                - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+        samples:
+            STO110151:
+                alias: "20250724LIB151"
+                image_file:
+                image_file_md5:
+                barcode_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB151/st_chip/STO110151.barcodeToPos.h5
+                barcode_file_md5:
+                fastqs:
+                    fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB151/BBV2.5/20250724LIB151_L03_R1.fq.gz
+                    fastq_r1_md5:
+                    fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB151/BBV2.5/20250724LIB151_L03_R2.fq.gz
+                    fastq_r2_md5:
+            STO110152:
+                alias: "20250724LIB152"
+                image_file:
+                image_file_md5:
+                barcode_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB152/st_chip/STO110152.barcodeToPos.h5
+                barcode_file_md5:
+                fastqs:
+                    fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB152/BBV2.5/20250724LIB152_L03_R1.fq.gz
+                    fastq_r1_md5:
+                    fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB152/BBV2.5/20250724LIB152_L03_R2.fq.gz
+                    fastq_r2_md5:
+            STO110153:
+                alias: "20250724LIB153"
+                image_file:
+                image_file_md5:
+                barcode_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB153/st_chip/STO110153.barcodeToPos.h5
+                barcode_file_md5:
+                fastqs:
+                    fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB153/BBV2.5/20250724LIB153_L03_R1.fq.gz
+                    fastq_r1_md5:
+                    fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB153/BBV2.5/20250724LIB153_L03_R2.fq.gz
+                    fastq_r2_md5:
+            STO110154:
+                alias: "20250724LIB154"
+                image_file:
+                image_file_md5:
+                barcode_file: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB154/st_chip/STO110154.barcodeToPos.h5
+                barcode_file_md5:
+                fastqs:
+                    fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB154/BBV2.5/20250724LIB154_L03_R1.fq.gz
+                    fastq_r1_md5:
+                    fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/slide_seq/20250728_decoded_embryo/20250724LIB154/BBV2.5/20250724LIB154_L03_R2.fq.gz
+                    fastq_r2_md5:
+#     20250629_decoded_kidney:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: "Pnc"
+#             control_samples: []
+#             external_controls:
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/slide_seq_decoded/20250403_decoded_kidney/ST110272_A1/06.cit_files/ST110272_A1.corrected.cit
+#         samples:
+#             ST110307_A1:
+#                 alias: 250619LIB307A
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307A/st_chip/ST110307_A1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307A/BBV2.5/250619LIB307A_L00_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307A/BBV2.5/250619LIB307A_L00_R2.fq.gz
+#                     fastq_r2_md5:
+#             ST110309_B1:
+#                 alias: 250619LIB309B
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309B/st_chip/ST110309_B1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309B/BBV2.5/250619LIB307B_L00_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309B/BBV2.5/250619LIB307B_L00_R2.fq.gz
+#                     fastq_r2_md5:
+#             ST110307_B1:
+#                 alias: 250619LIB307B
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307B/st_chip/ST110307_B1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307B/BBV2.5/250619LIB309B_L02_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307B/BBV2.5/250619LIB309B_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307B/BBV2.5/250619LIB309B_L02_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB307B/BBV2.5/250619LIB309B_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             ST110309_A1:
+#                 alias: 250619LIB309A
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309A/st_chip/ST110309_A1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309A/BBV2.5/250619LIB309A_L02_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309A/BBV2.5/250619LIB309A_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309A/BBV2.5/250619LIB309A_L02_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250630_decoded_kidney/250619LIB309A/BBV2.5/250619LIB309A_L03_R2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250611_decoded_kidney:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: "Pnc"
+#             control_samples: []
+#             external_controls:
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/slide_seq_decoded/20250403_decoded_kidney/ST110272_A1/06.cit_files/ST110272_A1.corrected.cit
+#         samples:
+#             ST110304_A1:
+#                 alias: 20250611LibA
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_A1/st_chip/ST110304_A1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_A1/BBV2.4/20250611LibA_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_A1/BBV2.4/20250611LibA_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             ST110304_B1:
+#                 alias: 20250611LibB
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_B1/st_chip/ST110304_B1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_B1/BBV2.4/20250611LibB_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250611_decoded_kidney/ST110304_B1/BBV2.4/20250611LibB_L03_R2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250427_decoded_kidney:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: ST110273_A1
+#             control_samples: ["ST110273_A1"]
+#             external_controls:
+#         samples:
+#             ST110273_A1:
+#                 alias: A1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/images/kidney/ST110273-A.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_A1/st_chip/ST110273_A1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_A1/BBV2.4/LIBA_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_A1/BBV2.4/LIBA_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             ST110273_B1:
+#                 alias: B1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/images/kidney/ST110273-B.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_B1/st_chip/ST110273_B1.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_B1/BBV2.4/LIBB_L02_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250427_decoded_kidney/ST110273_B1/BBV2.4/LIBB_L02_R2.fq.gz
+#                     fastq_r2_md5:
+#   
+#     20250403_decoded_kidney:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: A1
+#             control_samples: ["ST110272_A1"]
+#             segment_method: gene_expr
+#         samples:
+#             ST110272_A1:
+#                 alias: 20250403Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/images/0.8mg4sU-kidney1-Region_004.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_A1/st_chip/ST110272_A1.barcodeToPos.h5
+#                 barcode_file_md5: 60e0aeb7ae6a249dc0a4ba67a8883864
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_A1/BBV2.4/ST110272_A1_L02_R1.fq.gz
+#                     fastq_r1_md5: 7f5446fcefd60a276f217f42e1c1df0e
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_A1/BBV2.4/ST110272_A1_L02_R2.fq.gz
+#                     fastq_r2_md5: d4dcd8d405557ed76edda3f1f0a5fe09
+#             ST110272_B1:
+#                 alias: 20250403Lib2
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/images/0.8mg4sU-kidney1-Region_004.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_B1/st_chip/ST110272_B1.barcodeToPos.h5
+#                 barcode_file_md5: 6a31a72ee2af40e3d05c5ab082a92529
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_B1/BBV2.4/ST110272_B1_L01_R1.fq.gz
+#                     fastq_r1_md5: 38d0013bb3e616eac4f2840c473169ab
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_kidney/ST110272_B1/BBV2.4/ST110272_B1_L01_R2.fq.gz
+#                     fastq_r2_md5: 8f8425aff3d6468e6f61d98b40b8c05b
+# 
+#     20250604_decoded_embryo:
+#         information:
+#         parameters:
+#             control_pattern: "Pnc"
+#             control_samples: []
+#             external_controls: 
+#                 - /mnt/backup/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#                 - /mnt/backup/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#                 - /mnt/backup/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#         samples:
+#             STO110143:
+#                 alias: 20250604Lib1
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110143/st_chip/STO110143.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110143/BBV2.4/20250604Lib1_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110143/BBV2.4/20250604Lib1_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110144:
+#                 alias: 20250604Lib2
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110144/st_chip/STO110144.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110144/BBV2.4/20250604Lib2_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110144/BBV2.4/20250604Lib2_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110145:
+#                 alias: 20250604Lib3
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110145/st_chip/STO110145.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110145/BBV2.4/20250604Lib3_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110145/BBV2.4/20250604Lib3_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110146:
+#                 alias: 20250604Lib4
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110146/st_chip/STO110146.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110146/BBV2.4/20250604Lib4_L02_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110146/BBV2.4/20250604Lib4_L02_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110147:
+#                 alias: 20250604Lib5
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110147/st_chip/STO110147.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110147/BBV2.4/20250604Lib5_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110147/BBV2.4/20250604Lib5_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110148:
+#                 alias: 20250604Lib6
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110148/st_chip/STO110148.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110148/BBV2.4/20250604Lib6_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110148/BBV2.4/20250604Lib6_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110149:
+#                 alias: 20250604Lib7
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110149/st_chip/STO110149.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110149/BBV2.4/20250604Lib7_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110149/BBV2.4/20250604Lib7_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110150:
+#                 alias: 20250604Lib8
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110150/st_chip/STO110150.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110150/BBV2.4/20250604Lib8_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250604_decoded_embryo/STO110150/BBV2.4/20250604Lib8_L04_R2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250522_decoded_embryo:
+#         information:
+#         parameters:
+#             control_pattern: "Pnc"
+#             control_samples: []
+#             external_controls: 
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#         samples:
+#             OST110079:
+#                 alias: 20250522LIB1
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110079/st_chip/OST110079.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110079/BBV2.4/20250522LIB1_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110079/BBV2.4/20250522LIB1_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             OST110080:
+#                 alias: 20250522LIB2
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110080/st_chip/OST110080.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110080/BBV2.4/20250522LIB2_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110080/BBV2.4/20250522LIB2_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             OST110081:
+#                 alias: 20250522LIB3
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110081/st_chip/OST110081.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110081/BBV2.4/20250522LIB3_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110081/BBV2.4/20250522LIB3_L01_R2.fq.gz
+#                     fastq_r2_md5:
+#             OST110082:
+#                 alias: 20250522LIB4
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110082/st_chip/OST110082.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110082/BBV2.4/20250522LIB4_L02_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/OST110082/BBV2.4/20250522LIB4_L02_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110118:
+#                 alias: 20250522LIB5
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110118/st_chip/STO110118.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110118/BBV2.4/20250522LIB5_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110118/BBV2.4/20250522LIB5_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110135:
+#                 alias: 20250522LIB6
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110135/st_chip/STO110135.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110135/BBV2.4/20250522LIB6_L02_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110135/BBV2.4/20250522LIB6_L02_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110136:
+#                 alias: 20250522LIB7
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110136/st_chip/STO110136.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110136/BBV2.4/20250522LIB7_L02_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110136/BBV2.4/20250522LIB7_L02_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110137:
+#                 alias: 20250522LIB8
+#                 image_file:
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110137/st_chip/STO110137.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110137/BBV2.4/20250522LIB8_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250522_decoded_embryo/STO110137/BBV2.4/20250522LIB8_L03_R2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250512_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: "Pnc"
+#             control_samples: []
+#             external_controls: 
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#         samples:
+#             STO110095:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/44.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110095/st_chip/STO110095.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110095/BBV2.4/20250512Lib1_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110095/BBV2.4/20250512Lib1_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110096:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/42.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110096/st_chip/STO110096.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110096/BBV2.4/20250512Lib2_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110096/BBV2.4/20250512Lib2_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110097:
+#                 alias: 20250512Lib1
+#                 image_file: # /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/40.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110097/st_chip/STO110097.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110097/BBV2.4/20250512Lib3_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110097/BBV2.4/20250512Lib3_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110098:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/38.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110098/st_chip/STO110098.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110098/BBV2.4/20250512Lib4_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110098/BBV2.4/20250512Lib4_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110099:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/36.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110099/st_chip/STO110099.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110099/BBV2.4/20250512Lib5_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110099/BBV2.4/20250512Lib5_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110100:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/34.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110100/st_chip/STO110100.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110100/BBV2.4/20250512Lib6_L03_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110100/BBV2.4/20250512Lib6_L03_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110101:
+#                 alias: 20250512Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/32.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110101/st_chip/STO110101.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110101/BBV2.4/20250512Lib7_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110101/BBV2.4/20250512Lib7_L04_R2.fq.gz
+#                     fastq_r2_md5:
+#             STO110102:
+#                 alias: 20250512Lib1
+#                 image_file: # /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/images/30.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110102/st_chip/STO110102.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110102/BBV2.4/20250512Lib8_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250512_decoded_embryo/STO110102/BBV2.4/20250512Lib8_L04_R2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250403_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: "STO110111"
+#             control_samples: ["STO110111"]
+#         samples:
+#             STO110111:
+#                 alias: Sample_1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/images/12.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110111/st_chip/STO110111.barcodeToPos.h5
+#                 barcode_file_md5: 0b664c0f7f961d9e829b03b38d6a18b0
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110111/BBV2.4/STO110111_L03_R1.fq.gz
+#                     fastq_r1_md5: f5cccaaf31b8391f7fc1ea8c08ed9d0a
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110111/BBV2.4/STO110111_L03_R2.fq.gz
+#                     fastq_r2_md5: d3bd60085aea51372ad90bf30b66004f
+#             STO110112:
+#                 alias: Sample_2
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/images/10.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110112/st_chip/STO110112.barcodeToPos.h5
+#                 barcode_file_md5: f85ce9614f44581cd5f9c38276bb4e74
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110112/BBV2.4/STO110112_L03_R1.fq.gz
+#                     fastq_r1_md5: fea5ef750167e9bc3cff1a4a207d6a88
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110112/BBV2.4/STO110112_L03_R2.fq.gz
+#                     fastq_r2_md5: dfe544eacdc3f085ec52771073b8dda3
+#             STO110113:
+#                 alias: Sample_3
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/images/8.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110113/st_chip/STO110113.barcodeToPos.h5
+#                 barcode_file_md5: 17d6e5549b7c23ebcb381b00fd93d995
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110113/BBV2.4/STO110113_L03_R1.fq.gz
+#                     fastq_r1_md5: 123f7089c7e4b234efbd2546051de544
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250403_decoded_embryo/STO110113/BBV2.4/STO110113_L03_R2.fq.gz
+#                     fastq_r2_md5: d3eb6997bfdcb6eb7c70e21ecb55ff80
+# 
+#     20250226_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: OST110029
+#             control_samples: ["OST110029"]
+#         samples:
+#             OST110029:
+#                 alias: 20250226Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/images/32.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110029/st_chip/OST110029.barcodeToPos.h5
+#                 barcode_file_md5: 999d531a153c3c87d4ffcb831daa5b98
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110029/BBV2.4/20250226LIB1_L04_R1.fq.gz
+#                     fastq_r1_md5: 78d8d3b1361900f881b97d71b14dcfcd
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110029/BBV2.4/20250226LIB1_L04_R2.fq.gz
+#                     fastq_r2_md5: 2217dbbd680663402d910c1eca1828cc
+#             OST110030:
+#                 alias: 20250226Lib2
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/images/32.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110030/st_chip/OST110030.barcodeToPos.h5
+#                 barcode_file_md5: 133091a5e3d694cc896c2a0022ec6b18
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110030/BBV2.4/20250226LIB2_L03_R1.fq.gz
+#                     fastq_r1_md5: 2f9de32f0a54ef5df6e9b24ae022604d
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110030/BBV2.4/20250226LIB2_L03_R2.fq.gz
+#                     fastq_r2_md5: 9a839a72dbb73a60fc72855dbdbc786a
+#             OST110087:
+#                 alias: 20250226Lib3
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/images/19.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110087/st_chip/OST110087.barcodeToPos.h5
+#                 barcode_file_md5: 4b0ea39814aa90648b71a67a5ee80f93
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110087/BBV2.4/20250226LIB3_L04_R1.fq.gz
+#                     fastq_r1_md5: bbd584daa1bd7b02a3de75cb087d2e52
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110087/BBV2.4/20250226LIB3_L04_R2.fq.gz
+#                     fastq_r2_md5: 5447b967a14a2d9e60b3ad2eede99d01
+#             OST110088:
+#                 alias: 20250226Lib4
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/images/19.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110088/st_chip/OST110088.barcodeToPos.h5
+#                 barcode_file_md5: 4bf00182f0f1f92628dc4a97fabef191
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110088/BBV2.4/20250226LIB4_L03_R1.fq.gz
+#                     fastq_r1_md5: 9a0d5dcc16bfc2ccb1c62abf9ba20b4e
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250226_decoded_embryo/OST110088/BBV2.4/20250226LIB4_L03_R2.fq.gz
+#                     fastq_r2_md5: aaa8931305046af5b77dd2e25dfa0bfd
+
+#     20250314_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: OST110090
+#             control_samples: ["OST110090"]
+#             external_controls: 
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#         samples:
+#             OST110090:
+#                 alias: 20250314Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/images/35.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110090/st_chip/OST110090.barcodeToPos.h5
+#                 barcode_file_md5: 9160e910b037a48b72f98b5c0c5465b0
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110090/BBV2.4/OST110090_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110090/BBV2.4/OST110090_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110091:
+#                 alias: 20250314Lib2
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/images/25.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110091/st_chip/OST110091.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110091/BBV2.4/OST110091_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110091/BBV2.4/OST110091_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110092:
+#                 alias: 20250314Lib3
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/images/23.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110092/st_chip/OST110092.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110092/BBV2.4/OST110092_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110092/BBV2.4/OST110092_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110093:
+#                 alias: 20250314Lib4
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/images/21.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110093/st_chip/OST110093.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110093/BBV2.4/OST110093_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110093/BBV2.4/OST110093_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110094:
+#                 alias: 20250314Lib5
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/images/19.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110094/st_chip/OST110094.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110094/BBV2.4/OST110094_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250314_decoded_embryo/OST110094/BBV2.4/OST110094_2.fq.gz
+#                     fastq_r2_md5:
+#  
+#     20250319_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: OST110083
+#             control_samples: ["OST110083"]
+#         samples:
+#             OST110083:
+#                 alias: 20250319Lib1
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/images/11.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110083/st_chip/OST110083.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110083/BBV2.4/OST110083_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110083/BBV2.4/OST110083_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110084:
+#                 alias: 20250319Lib2
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/images/11.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110084/st_chip/OST110084.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110084/BBV2.4/OST110084_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110084/BBV2.4/OST110084_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110085:
+#                 alias: 20250319Lib3
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/images/11.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110085/st_chip/OST110085.barcodeToPos.h5
+#                 barcode_file_md5: bbda6376f6c525861cdf50a1fa7b494e
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110085/BBV2.4/OST110085_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110085/BBV2.4/OST110085_1.fq.gz
+#                     fastq_r2_md5:
+#             OST110086:
+#                 alias: 20250319Lib4
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/images/5.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110086/st_chip/OST110086.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110086/BBV2.4/OST110086_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110086/BBV2.4/OST110086_2.fq.gz
+#                     fastq_r2_md5:
+#             OST110089:
+#                 alias: 20250319Lib5
+#                 image_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/images/5.tiff
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110089/st_chip/OST110089.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110089/BBV2.4/OST110089_1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250319_decoded_embryo/OST110089/BBV2.4/OST110089_2.fq.gz
+#                     fastq_r2_md5:
+# 
+#     20250423_decoded_embryo:
+#         information:
+#         parameters: # parameters specific for a batch
+#             control_pattern: nc_no4suctrl
+#             control_samples: []
+#             external_controls: 
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/SLAM_20250321_byPLY/cit_files/per_sample/nc_no4suctrl_r1.corrected.cit
+#                 - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/SLAM_20250321_byPLY/cit_files/per_sample/nc_no4suctrl_r2.corrected.cit
+#         samples:
+#             STO110107:
+#                 alias: 107LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-17.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110107/st_chip/STO110107.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110107/BBV2.4/107LIB_L03_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110107/BBV2.4/107LIB_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110107/BBV2.4/107LIB_L03_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110107/BBV2.4/107LIB_L04_R2.fq.gz
+#             STO110108:
+#                 alias: 108LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-15.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110108/st_chip/STO110108.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110108/BBV2.4/108LIB_L03_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110108/BBV2.4/108LIB_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110108/BBV2.4/108LIB_L03_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110108/BBV2.4/108LIB_L04_R2.fq.gz
+#             STO110109:
+#                 alias: 109LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-13.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110109/st_chip/STO110109.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110109/BBV2.4/109LIB_L03_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110109/BBV2.4/109LIB_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110109/BBV2.4/109LIB_L03_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110109/BBV2.4/109LIB_L04_R2.fq.gz
+#             STO110110:
+#                 alias: 110LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-9.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110110/st_chip/STO110110.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110110/BBV2.4/110LIB_L01_R2.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110110/BBV2.4/110LIB_L01_R1.fq.gz
+#                     fastq_r2_md5:
+#             STO110114:
+#                 alias: 114LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-7.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110114/st_chip/STO110114.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110114/BBV2.4/114LIB_L03_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110114/BBV2.4/114LIB_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110114/BBV2.4/114LIB_L03_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110114/BBV2.4/114LIB_L04_R2.fq.gz
+#             STO110115:
+#                 alias: 115LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-5.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110115/st_chip/STO110115.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110115/BBV2.4/115LIB_L03_R1.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110115/BBV2.4/115LIB_L04_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2:
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110115/BBV2.4/115LIB_L03_R2.fq.gz
+#                         - /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110115/BBV2.4/115LIB_L04_R2.fq.gz
+#             STO110116:
+#                 alias: 116LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/IAA-3.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110116/st_chip/STO110116.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110116/BBV2.4/116LIB_L01_R2.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110116/BBV2.4/116LIB_L01_R1.fq.gz
+#                     fastq_r2_md5:
+#             STO110117:
+#                 alias: 117LIB
+#                 image_file: #/mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/images/embryo/NC-10.tif
+#                 image_file_md5:
+#                 barcode_file: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110117/st_chip/STO110117.barcodeToPos.h5
+#                 barcode_file_md5:
+#                 fastqs:
+#                     fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110117/BBV2.4/117LIB_L01_R1.fq.gz
+#                     fastq_r1_md5:
+#                     fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/slide_seq/20250423_decoded_embryo/STO110117/BBV2.4/117LIB_L01_R2.fq.gz
+#                     fastq_r2_md5:

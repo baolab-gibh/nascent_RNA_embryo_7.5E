@@ -3,3 +3,6 @@
 **/archived
 **/.rbcsignore
 misc
+**/.DS_Store
+cpp/src/htslib
+**/.ccls

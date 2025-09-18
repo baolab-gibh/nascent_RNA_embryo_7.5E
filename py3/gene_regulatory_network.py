@@ -40,7 +40,7 @@ tf_names = [x.stem.split("_")[0] for x in target_tf_dir.glob("*.tsv")]
 loom_files = [proj_dir / f"outputs/pseudo_bulk/gene_regulatory_network/data/300bcg_{ts}.loom" for ts in condition_list]
 
 # motif annotation
-motif_ann_file = proj_dir / "inputs/RcisTarget_db/motif2tf/motifs-v10nr_clust-nr.hgnc-m0.001-o0.0.tbl"
+moif_ann_file = proj_dir / "inputs/RcisTarget_db/motif2tf/motifs-v10nr_clust-nr.mgi-m0.001-o0.0.tbl"
 
 # motif database
 db_fnames = [[p.name.split("_")[1], str(p)] for p in list(feather_dir.glob("*.rankings.feather"))]

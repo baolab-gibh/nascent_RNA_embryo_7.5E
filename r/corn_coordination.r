@@ -16,10 +16,12 @@ suppressPackageStartupMessages({
 project_dir <- "~/Documents/projects/wp_vasaseq"
 
 # Sigmod function
-sigmod <- function(x) 1.0 / (1.0 + exp(3) ^ (-sqrt(x)))
+sigmod <- function(x) 1.0 / (1.0 + exp(2) ^ (-sqrt(x)))
 shift_val <- sigmod(1:2) %>% (function(vc) c(min(vc), max(vc))) %>% quantile(probs = 0.075) %>% `*`(0.9975)
-shrink <- function(y_pos, shift_val) {
-  sigmod(1:y_pos) %>% (function(vc) c(min(vc), max(vc))) %>% quantile(probs = c(0.025, 0.065, 0.100, 0.135)) %>% as.vector() %>% `-`(shift_val)
+shrink <- function(y_pos, shift_val, scale_factor=1000) {
+  sigmod(1:y_pos) %>% (function(vc) c(min(vc), max(vc))) %>%
+    quantile(probs = c(0.035, 0.0625, 0.0875, 0.11)) %>% as.vector() %>%
+    `-`(shift_val) %>% `*`(scale_factor)
 }
 
 # Dyanmics by corn plot
@@ -52,12 +54,11 @@ corn_axis <- data.frame(y_pos = sort(rep(2:16, 4))) %>%
 corn_axis %>% fwrite(file.path(project_dir, "inputs/reference/corn_coordination/corn_axis.e_7_5.csv"))
 
 p <- ggplot() +
-  geom_point(aes(x = x_pos, y = Layers, fill = Regions_l1), corn_axis %>% dplyr::filter(!Regions_l1 %in% c("MA", "MP")), shape = 21, color = "black", size = 8) +
-  geom_point(aes(x = x_pos, y = Layers, fill = Regions_l1), corn_axis %>% dplyr::filter(Regions_l1 %in% c("MA", "MP")), shape = 23, color = "black", size = 8) +
+  geom_point(aes(x = x_pos, y = Layers, fill = Regions_l1), corn_axis, shape = 21, color = "black", size = 7) +
   scale_fill_npg() +
+  scale_x_continuous(expand = c(.1, -.1)) +
   labs(x = NULL, y = "Layers") +
-  lims(x = c(-0.0075, 0.0075)) +
   theme_classic() +
   theme(axis.ticks.x = element_blank(), axis.text.x = element_blank(), axis.ticks.y = element_line())
 corn_axis_plot_saveto <- file.path(project_dir, "inputs/reference/corn_coordination/corn_axis.e_7_5.pdf")
-ggsave(corn_axis_plot_saveto, plot = p, width = 4, height = 4.5)
+ggsave(corn_axis_plot_saveto, plot = p, width = 4, height = 4)

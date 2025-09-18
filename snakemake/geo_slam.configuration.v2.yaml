@@ -1,0 +1,158 @@
+# I/O
+# Configurations to run the pipeline.smk workflow
+
+# PLEASE ENSURE YOU HAVE ENOUGH STORAGE SPACE.
+# Working directory, including sequencing data, references, containers of tools, and all outputs.
+working_dir: ~/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam
+
+# Tool container
+app_image: ~/tools/containers/images/vasaslam_seq.sif # A path to the container (apptainer/singularity)
+app_image_md5: de3bc2e83b4cbd82fce5cb2c3d40b3be
+
+# Parameters used to manipulate the pipeline
+parameters:
+  # General
+  # Genome sequence
+  genome_sequence_file: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/GRCm38.primary_assembly.genome.fa
+  genome_sequence_file_md5: 4e004c5032ade9aa37cc795890051f7c
+
+  # Genomic fetures
+  genomic_feature_file: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/gencode.vM29lift38.annotation.gtf
+  genomic_feature_file_md5: 617ab0c95cd531e86608b056d5726455
+  erna_feature_file: ~/Documents/projects/wp_vasaseq/outputs/references/genomic_features/mus_musculus.90.wto_rRNA.overlapped_with_fantom5_and_ensembl.gtf
+  erna_feature_file_md5: eadeb57c7c02a72d81a46e1087bd0e97
+
+  # Reference
+  gedi_index_dir: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/GEDI_GRCm38
+  star_index_dir: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/STAR_GRCm38
+
+  # Required outputs, will be process by RuleIO class.
+  required_outputs:
+    - quality_control
+    - alignment
+    # - alignment_overview
+    - alignment_reports
+    - quantify_enhancer_rna
+    - quantify_genes
+    - nascent_rna_per_treatment
+
+  # Adapter sequence
+  adapter_sequence: "CTGTCTCTTATACACATCT"
+  adapter_sequence_rev_cmp: "AGATGTGTATAAGAGACAG"
+
+# Sequencing batches
+sequencing_batches:
+  GEO_SLAM_20250723:
+    parameters:
+      control_pattern: "no4su"
+      control_samples: [ "no4su" ]
+      adapter_sequence: ""
+      external_controls: []
+    n_samples: 0
+    samples:
+      sample_12A:
+        alias: 12A
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12A/12A_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12A/12A_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_12EA:
+        alias: 12EA
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12EA/12EA_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12EA/12EA_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_12EP:
+        alias: 12EP
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12EP/12EP_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12EP/12EP_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_12MA:
+        alias: 12MA
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12MA/12MA_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12MA/12MA_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_12MP:
+        alias: 12MP
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12MP/12MP_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12MP/12MP_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_12P:
+        alias: 12P
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12P/12P_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/12P/12P_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_3:
+        alias: 3
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/3/3_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/3/3_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_3_1:
+        alias: 3_1
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/3_1/3_1_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/3_1/3_1_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9A:
+        alias: 9A
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9A/9A_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9A/9A_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9EA:
+        alias: 9EA
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9EA/9EA_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9EA/9EA_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9EP:
+        alias: 9EP
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9EP/9EP_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9EP/9EP_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9MA:
+        alias: 9MA
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9MA/9MA_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9MA/9MA_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9MP:
+        alias: 9MP
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9MP/9MP_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9MP/9MP_raw_2.fq.gz
+          fastq_r2_md5:
+      sample_9P:
+        alias: 9P
+        fastqs:
+          fastq_r1: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9P/9P_raw_1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250723_GEO_SLAM/00.mergeRawFq/9P/9P_raw_2.fq.gz
+          fastq_r2_md5:
+      no4su:
+        alias: CTRL
+        fastqs:
+          fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/reference/No4su_control/NC_4su_ATGCTC.R1.fq.gz
+          fastq_r1_md5:
+          fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/reference/No4su_control/NC_4su_ATGCTC.R2.fq.gz
+          fastq_r2_md5:
+

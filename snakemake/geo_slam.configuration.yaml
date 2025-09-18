@@ -1,0 +1,776 @@
+# I/O
+# Configurations to run the pipeline.smk workflow
+
+# PLEASE ENSURE YOU HAVE ENOUGH STORAGE SPACE.
+# Working directory, including sequencing data, references, containers of tools, and all outputs.
+working_dir: ~/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam
+
+# Tool container
+app_image: ~/tools/containers/images/vasaslam_seq.sif # A path to the container (apptainer/singularity)
+app_image_md5: de3bc2e83b4cbd82fce5cb2c3d40b3be
+
+# Parameters used to manipulate the pipeline
+parameters:
+  # General
+  # Genome sequence
+  genome_sequence_file: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/GRCm38.primary_assembly.genome.fa
+  genome_sequence_file_md5: 4e004c5032ade9aa37cc795890051f7c
+
+  # Genomic fetures
+  genomic_feature_file: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/gencode.vM29lift38.annotation.gtf
+  genomic_feature_file_md5: 617ab0c95cd531e86608b056d5726455
+  erna_feature_file: ~/Documents/projects/wp_vasaseq/outputs/references/genomic_features/mus_musculus.90.wto_rRNA.overlapped_with_fantom5_and_ensembl.gtf
+  erna_feature_file_md5: eadeb57c7c02a72d81a46e1087bd0e97
+
+  # Reference
+  gedi_index_dir: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/GEDI_GRCm38
+  star_index_dir: ~/Documents/projects/wp_vasaseq/inputs/reference/genome/STAR_GRCm38
+
+  # Required outputs, will be process by RuleIO class.
+  required_outputs:
+    - quality_control
+    - alignment
+    - alignment_overview
+    - alignment_reports
+    - nascent_rna
+    - nascent_rna_per_treatment
+    - quantify_enhancer_rna
+    - quantify_genes
+    # - publication
+
+  # Barcode structure due to the multiplexing sequencing protocol
+  barcode_pattern: "C6U8T24N2"
+
+  # Adapter sequence
+  adapter_sequence: "CTGTCTCTTATACACATCT"
+  adapter_sequence_rev_cmp: "AGATGTGTATAAGAGACAG"
+
+# Sequencing batches
+sequencing_batches:
+#   GEO_VASA_SLAM_240409: # GEO VASA SLAM combination.
+#     parameters: # parameters specific for a batch
+#       control_pattern: Pnc
+#       control_samples: []
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240409_Lib_32region/00.mergeRawFq/240409_Lib_embryo/240409_Lib_embryo_raw_1.fq.gz
+#       fastq_r1_md5: 7ea94beaa9b71f349da60dd986e7e1b4
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240409_Lib_32region/00.mergeRawFq/240409_Lib_embryo/240409_Lib_embryo_raw_2.fq.gz
+#       fastq_r2_md5: b082dfda3bb9f410c858a079b473d3eb
+#     n_samples: 32
+#     samples:
+#       3A:   { barcodes: "CTCACA" }
+#       3P:   { barcodes: "TACTGC" }
+#       3EA:  { barcodes: "ATCAGC" }
+#       3EP:  { barcodes: "CGACTA" }
+#       5A:   { barcodes: "CGTCAT" }
+#       5P:   { barcodes: "CTCGAT" }
+#       5R:   { barcodes: "TAGCAC" }
+#       5L:   { barcodes: "TCTAGC" }
+#       5MA:  { barcodes: "CACGTA" }
+#       5MP:  { barcodes: "ATGCTC" }
+#       5EA:  { barcodes: "GCTACA" }
+#       5EP:  { barcodes: "GCATCT" }
+#       7A:   { barcodes: "ACATGC" }
+#       7P:   { barcodes: "ACGTCA" }
+#       7MA:  { barcodes: "CATGCT" }
+#       7MP:  { barcodes: "CTAGTC" }
+#       7EA:  { barcodes: "TGCATC" }
+#       7EP:  { barcodes: "CATCTG" }
+#       9A:   { barcodes: "CAGATC" }
+#       9P:   { barcodes: "AGCACT" }
+#       9MA:  { barcodes: "ACTCGA" }
+#       9MP:  { barcodes: "TCACGT" }
+#       9EA:  { barcodes: "GTCTAC" }
+#       9EP:  { barcodes: "TCTCAG" }
+#       11A:  { barcodes: "TCAGAC" }
+#       11P:  { barcodes: "GACTCA" }
+#       11R:  { barcodes: "CACAGT" }
+#       11L:  { barcodes: "ACACTG" }
+#       11MA: { barcodes: "GCAGTA" }
+#       11MP: { barcodes: "GCTGAT" }
+#       11EA: { barcodes: "TAGTCG" }
+#       11EP: { barcodes: "ATGACG" }
+# 
+#   GEO_VASA_SLAM_240612:
+#     parameters:
+#       control_pattern: "nc"
+#       control_samples: [ "10Anc", "10Pnc", "10MAnc", "10EAnc", "10EPnc" ]
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240612_Lib_28region/00.mergeRawFq/240612_Lib_28region/240612_Lib_28region_raw_1.fq.gz
+#       fastq_r1_md5: 3daaf3b6fd603f458930a416afca2da3
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240612_Lib_28region/00.mergeRawFq/240612_Lib_28region/240612_Lib_28region_raw_2.fq.gz
+#       fastq_r2_md5: db4b9998e18a0ed84f5349bfba79f77d
+#     n_samples: 28
+#     samples:
+#       10Anc:  { barcodes: "CTCACA" }
+#       10Pnc:  { barcodes: "TACTGC" }
+#       10MAnc: { barcodes: "ATCAGC" }
+#       10EAnc: { barcodes: "CGACTA" }
+#       10EPnc: { barcodes: "CGTCAT" }
+#       2P:     { barcodes: "CTCGAT" }
+#       2A:     { barcodes: "TAGCAC" }
+#       5P:     { barcodes: "TCTAGC" }
+#       5A:     { barcodes: "CACGTA" }
+#       5L:     { barcodes: "ATGCTC" }
+#       5R:     { barcodes: "GCTACA" }
+#       5MP:    { barcodes: "GCATCT" }
+#       5MA:    { barcodes: "ACATGC" }
+#       5EP:    { barcodes: "ACGTCA" }
+#       5EA:    { barcodes: "CATGCT" }
+#       8P:     { barcodes: "CTAGTC" }
+#       8A:     { barcodes: "TGCATC" }
+#       8MP:    { barcodes: "CATCTG" }
+#       8MA:    { barcodes: "CAGATC" }
+#       8EP:    { barcodes: "AGCACT" }
+#       11P:    { barcodes: "ACTCGA" }
+#       11A:    { barcodes: "TCACGT" }
+#       11L:    { barcodes: "GTCTAC" }
+#       11R:    { barcodes: "TCTCAG" }
+#       11MP:   { barcodes: "TCAGAC" }
+#       11MA:   { barcodes: "GACTCA" }
+#       11EP:   { barcodes: "CACAGT" }
+#       11EA:   { barcodes: "ACACTG" }
+# 
+#   GEO_VASA_SLAM_240620:
+#     parameters:
+#       control_pattern: "nc"
+#       control_samples: [ "8Anc", "8Pnc", "8MAnc", "8MPnc", "8EAnc", "8EPnc" ]
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240620_Lib_38region/00.mergeRawFq/240620_Lib_38region/240620_Lib_38region_raw_1.fq.gz
+#       fastq_r1_md5: cddd5dda3e890e13c98a34ddf04809db
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240620_Lib_38region/00.mergeRawFq/240620_Lib_38region/240620_Lib_38region_raw_2.fq.gz
+#       fastq_r2_md5: c18c6dd13c76f584fcbd3d9408c6c24e
+#     n_samples: 38
+#     samples:
+#       8Anc:  { barcodes: "CTCACA" }
+#       8Pnc:  { barcodes: "TACTGC" }
+#       8MAnc: { barcodes: "ATCAGC" }
+#       8MPnc: { barcodes: "CGACTA" }
+#       8EAnc: { barcodes: "CGTCAT" }
+#       8EPnc: { barcodes: "CTCGAT" }
+#       2A:    { barcodes: "TAGCAC" }
+#       2P:    { barcodes: "TCTAGC" }
+#       4A:    { barcodes: "CACGTA" }
+#       4P:    { barcodes: "ATGCTC" }
+#       6A:    { barcodes: "GCTACA" }
+#       6P:    { barcodes: "GCATCT" }
+#       6R:    { barcodes: "ACATGC" }
+#       6L:    { barcodes: "ACGTCA" }
+#       6MA:   { barcodes: "CATGCT" }
+#       6MP:   { barcodes: "CTAGTC" }
+#       6EA:   { barcodes: "TGCATC" }
+#       6EP:   { barcodes: "CATCTG" }
+#       8A:    { barcodes: "CAGATC" }
+#       8P:    { barcodes: "AGCACT" }
+#       8MA:   { barcodes: "ACTCGA" }
+#       8MP:   { barcodes: "TCACGT" }
+#       8EA:   { barcodes: "GTCTAC" }
+#       8EP:   { barcodes: "TCTCAG" }
+#       12A:   { barcodes: "TCAGAC" }
+#       12P:   { barcodes: "GACTCA" }
+#       12R:   { barcodes: "CACAGT" }
+#       12L:   { barcodes: "ACACTG" }
+#       12MA:  { barcodes: "GCAGTA" }
+#       12MP:  { barcodes: "GCTGAT" }
+#       12EA:  { barcodes: "TAGTCG" }
+#       12EP:  { barcodes: "ATGACG" }
+#       14A:   { barcodes: "CGATGT" }
+#       14P:   { barcodes: "AGATCG" }
+#       14MA:  { barcodes: "TACGAG" }
+#       14MP:  { barcodes: "CGTAGA" }
+#       14EA:  { barcodes: "TGTACG" }
+#       14EP:  { barcodes: "ATCGTG" }
+# 
+#   GEO_VASA_SLAM_240703:
+#     parameters:
+#       control_pattern: "nc"
+#       control_samples: [ "11Enc1", "11Enc2", "11Enc3", "11Enc4" , "11MEnc1", "11MEnc2"]
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240703_Lib_32region/00.mergeRawFq/240703_Lib_32region/240703_Lib_32region_raw_1.fq.gz
+#       fastq_r1_md5: c1d9c7c5233529e1d262c9703f32c610
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240703_Lib_32region/00.mergeRawFq/240703_Lib_32region/240703_Lib_32region_raw_2.fq.gz
+#       fastq_r2_md5: a7296d07c16ea7121c74fb30b68d855d
+#     n_samples: 32
+#     samples:
+#       11Enc1:  { barcodes: "CTCACA" }
+#       11Enc2:  { barcodes: "TACTGC" }
+#       11MEnc1: { barcodes: "ATCAGC" }
+#       11MEnc2: { barcodes: "CGACTA" }
+#       11Enc3:  { barcodes: "CGTCAT" }
+#       11Enc4:  { barcodes: "CTCGAT" }
+#       3A:      { barcodes: "TAGCAC" }
+#       3P:      { barcodes: "TCTAGC" }
+#       5A:      { barcodes: "CACGTA" }
+#       5P:      { barcodes: "ATGCTC" }
+#       7A:      { barcodes: "GCTACA" }
+#       7P:      { barcodes: "GCATCT" }
+#       7R:      { barcodes: "ACATGC" }
+#       7L:      { barcodes: "ACGTCA" }
+#       7MA:     { barcodes: "CATGCT" }
+#       7MP:     { barcodes: "CTAGTC" }
+#       7EA:     { barcodes: "TGCATC" }
+#       7EP:     { barcodes: "CATCTG" }
+#       9A:      { barcodes: "CAGATC" }
+#       9P:      { barcodes: "AGCACT" }
+#       9MA:     { barcodes: "ACTCGA" }
+#       9MP:     { barcodes: "TCACGT" }
+#       9EA:     { barcodes: "GTCTAC" }
+#       9EP:     { barcodes: "TCTCAG" }
+#       11A:     { barcodes: "TCAGAC" }
+#       11P:     { barcodes: "GACTCA" }
+#       11R:     { barcodes: "CACAGT" }
+#       11L:     { barcodes: "ACACTG" }
+#       11MA:    { barcodes: "GCAGTA" }
+#       11MP:    { barcodes: "GCTGAT" }
+#       11EA:    { barcodes: "TAGTCG" }
+#       11EP:    { barcodes: "ATGACG" }
+# 
+#   GEO_VASA_SLAM_240710:
+#     parameters:
+#       control_pattern: "nc"
+#       control_samples: [ "14Pnc", "14MPnc", "14EPnc" ]
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240710_Lib_37region/00.mergeRawFq/240710_Lib_37region/240710_Lib_37region_raw_1.fq.gz
+#       fastq_r1_md5: 982023f3e4343cebd6d5849bf0b6c8cb
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240710_Lib_37region/00.mergeRawFq/240710_Lib_37region/240710_Lib_37region_raw_2.fq.gz
+#       fastq_r2_md5: 2ce2618669fad0fcbf0cc529cae82b1a
+#     n_samples: 37
+#     samples:
+#       14Pnc:  { barcodes: "CTCACA" }
+#       14MPnc: { barcodes: "TACTGC" }
+#       14EPnc: { barcodes: "ATCAGC" }
+#       1A:     { barcodes: "CGACTA" }
+#       1P:     { barcodes: "CGTCAT" }
+#       4A:     { barcodes: "CTCGAT" }
+#       4P:     { barcodes: "TAGCAC" }
+#       4EA:    { barcodes: "TCTAGC" }
+#       4EP:    { barcodes: "CACGTA" }
+#       7A:     { barcodes: "ATGCTC" }
+#       7P:     { barcodes: "GCTACA" }
+#       7R:     { barcodes: "GCATCT" }
+#       7L:     { barcodes: "ACATGC" }
+#       7MA:    { barcodes: "ACGTCA" }
+#       7MP:    { barcodes: "CATGCT" }
+#       7EA:    { barcodes: "CTAGTC" }
+#       7EP:    { barcodes: "TGCATC" }
+#       10A:    { barcodes: "CATCTG" }
+#       10P:    { barcodes: "CAGATC" }
+#       10MA:   { barcodes: "AGCACT" }
+#       10MP:   { barcodes: "ACTCGA" }
+#       10EA:   { barcodes: "TCACGT" }
+#       10EP:   { barcodes: "GTCTAC" }
+#       13A:    { barcodes: "TCTCAG" }
+#       13P:    { barcodes: "TCAGAC" }
+#       13R:    { barcodes: "GACTCA" }
+#       13L:    { barcodes: "CACAGT" }
+#       13MA:   { barcodes: "ACACTG" }
+#       13MP:   { barcodes: "GCAGTA" }
+#       13EA:   { barcodes: "GCTGAT" }
+#       13EP:   { barcodes: "TAGTCG" }
+#       16A:    { barcodes: "ATGACG" }
+#       16P:    { barcodes: "CGATGT" }
+#       16MA:   { barcodes: "AGATCG" }
+#       16MP:   { barcodes: "TACGAG" }
+#       16EA:   { barcodes: "CGTAGA" }
+#       16EP:   { barcodes: "TGTACG" }
+# 
+#   GEO_VASA_SLAM_240717:
+#     parameters:
+#       control_pattern: "nc"
+#       control_samples: [ "14Pnc", "14MPnc", "14EPnc" ]
+#       barcode_pattern: "C6U8T24N2"
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240717_Lib_28region/00.mergeRawFq/240717_Lib_28region/240717_Lib_28region_raw_1.fq.gz
+#       fastq_r1_md5: b5208b8bb98a115c09b8ddba3d5badd2
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_vasa_slam/240717_Lib_28region/00.mergeRawFq/240717_Lib_28region/240717_Lib_28region_raw_2.fq.gz
+#       fastq_r2_md5: dbdcfb833971468a25bab9119e1664e0
+#     n_samples: 28
+#     samples:
+#       14Pnc:  { barcodes: "CTCACA" }
+#       14MPnc: { barcodes: "TACTGC" }
+#       14EPnc: { barcodes: "ATCAGC" }
+#       4A:     { barcodes: "CGACTA" }
+#       4P:     { barcodes: "CGTCAT" }
+#       4EA:    { barcodes: "CTCGAT" }
+#       4EP:    { barcodes: "TAGCAC" }
+#       7A:     { barcodes: "TCTAGC" }
+#       7P:     { barcodes: "CACGTA" }
+#       7MA:    { barcodes: "ATGCTC" }
+#       7MP:    { barcodes: "GCTACA" }
+#       7EA:    { barcodes: "GCATCT" }
+#       7EP:    { barcodes: "ACATGC" }
+#       10A:    { barcodes: "ACGTCA" }
+#       10P:    { barcodes: "CATGCT" }
+#       10R:    { barcodes: "CTAGTC" }
+#       10L:    { barcodes: "TGCATC" }
+#       10MA:   { barcodes: "CATCTG" }
+#       10MP:   { barcodes: "CAGATC" }
+#       10EA:   { barcodes: "AGCACT" }
+#       10EP:   { barcodes: "ACTCGA" }
+#       15A:    { barcodes: "TCACGT" }
+#       15P:    { barcodes: "GTCTAC" }
+#       15R:    { barcodes: "TCTCAG" }
+#       15L:    { barcodes: "TCAGAC" }
+#       15MP:   { barcodes: "CACAGT" }
+#       15EA:   { barcodes: "ACACTG" }
+#       15EP:   { barcodes: "GCAGTA" }
+# 
+#   SLAM_20250310:
+#     parameters:
+#       control_pattern: "ctrl_non4su"
+#       control_samples: ["ctrl_non4su_01", "ctrl_non4su_02", "ctrl_non4su_03", "ctrl_non4su_04", "ctrl_non4su_05"]
+#       barcode_pattern: "A18C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250310_SLAMseq/00.mergeRawFq/25-3-3_Lib/25-3-3_Lib_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250310_SLAMseq/00.mergeRawFq/25-3-3_Lib/25-3-3_Lib_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples:
+#     samples:
+#       ctrl_non4su_01: { barcodes: "CTCACA" }
+#       ctrl_non4su_02: { barcodes: "TACTGC" }
+#       ctrl_non4su_03: { barcodes: "ATCAGC" }
+#       ctrl_non4su_04: { barcodes: "CGACTA" }
+#       ctrl_non4su_05: { barcodes: "CGTCAT" }
+#       ctrl_4su_06:    { barcodes: "CTCGAT" }
+#       ctrl_4su_07:    { barcodes: "TAGCAC" }
+#       ctrl_4su_08:    { barcodes: "TCTAGC" }
+#       ctrl_4su_09:    { barcodes: "CACGTA" }
+#       ctrl_4su_10:    { barcodes: "ATGCTC" }
+#       IAA_11:         { barcodes: "GCTACA" }
+#       IAA_12:         { barcodes: "GCATCT" }
+#       IAA_13:         { barcodes: "ACATGC" }
+#       IAA_14:         { barcodes: "ACGTCA" }
+#       IAA_15:         { barcodes: "CATGCT" }
+#       IAA_16:         { barcodes: "CTAGTC" }
+#       IAA_17:         { barcodes: "TGCATC" }
+#       IAA_18:         { barcodes: "CATCTG" }
+#       IAA_19:         { barcodes: "CAGATC" }
+#       IAA_20:         { barcodes: "AGCACT" }
+# 
+#   SLAM_20250321_byPLY:
+#     parameters:
+#       control_pattern: "nc_no4suctrl"
+#       control_samples: [ "nc_no4suctrl_r1", "nc_no4suctrl_r2" ]
+#       barcode_pattern: "A18C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250321_SLAMseq/00.mergeRawFq/25-3-6_Lib/25-3-6_Lib_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250321_SLAMseq/00.mergeRawFq/25-3-6_Lib/25-3-6_Lib_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 16
+#     samples:
+#       lps_6h_r1:         { barcodes: "CTCACA" }
+#       lps_6h_r2:         { barcodes: "TACTGC" }
+#       lps_4_5h_r1:       { barcodes: "ATCAGC" }
+#       lps_4_5h_r2:       { barcodes: "CGACTA" }
+#       lps_3h_r1:         { barcodes: "CGTCAT" }
+#       lps_3h_r2:         { barcodes: "CTCGAT" }
+#       lps_1_5h_r1:       { barcodes: "TAGCAC" }
+#       lps_1_5h_r2:       { barcodes: "TCTAGC" }
+#       lps_1_5h_0_8mg_r1: { barcodes: "CACGTA" }
+#       lps_1_5h_0_8mg_r2: { barcodes: "ATGCTC" }
+#       lps_1_5h_1_6mg_r1: { barcodes: "GCTACA" }
+#       lps_1_5h_1_6mg_r2: { barcodes: "GCATCT" }
+#       lps_1_5h_3_2mg_r1: { barcodes: "ACATGC" }
+#       lps_1_5h_3_2mg_r2: { barcodes: "ACGTCA" }
+#       nc_no4suctrl_r1:   { barcodes: "CATGCT" }
+#       nc_no4suctrl_r2:   { barcodes: "CTAGTC" }
+# 
+#   SLAM_20250321_byLDJ:
+#     parameters:
+#       control_pattern: "nc_no4suctrl"
+#       control_samples: [ "nc_no4suctrl_r3" ]
+#       barcode_pattern: "A18C6U8T32N6"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       # adapter_sequence: "GGAAGAGCGTCGTGTAGGGAAAGAG"
+#       # adapter_sequence: "AAGCAGTGGTATCAACGCAGAGATC"
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250321_SLAMseq/00.mergeRawFq/25-3-8_Lib/25-3-8_Lib_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250321_SLAMseq/00.mergeRawFq/25-3-8_Lib/25-3-8_Lib_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 8
+#     samples:
+#       lps_6h_r3:         { barcodes: "CTCACA" }
+#       lps_4_5h_r3:       { barcodes: "TACTGC" }
+#       lps_3h_r3_r3:      { barcodes: "ATCAGC" }
+#       lps_1_5h_r3:       { barcodes: "CGACTA" }
+#       lps_1_5h_0_8mg_r3: { barcodes: "CGTCAT" }
+#       lps_1_5h_1_6mg_r3: { barcodes: "CTCGAT" }
+#       lps_1_5h_3_2mg_r3: { barcodes: "TAGCAC" }
+#       nc_no4suctrl_r3:   { barcodes: "TCTAGC" }
+# 
+#   GEO_SLAM_20250327:
+#     parameters:
+#       control_pattern: "nc_no4suctrl"
+#       control_samples: []
+#       barcode_pattern: "A18C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/SLAM_20250321_byPLY/cit_files/per_sample/nc_no4suctrl_r1.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/SLAM_20250321_byPLY/cit_files/per_sample/nc_no4suctrl_r2.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250327_SLAMseq/00.mergeRawFq/25-3-27_Lib/25-3-27_Lib_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250327_SLAMseq/00.mergeRawFq/25-3-27_Lib/25-3-27_Lib_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 44
+#     samples:
+#       2A:   { barcodes: "CTCACA" }
+#       2P:   { barcodes: "TACTGC" }
+#       2EA:  { barcodes: "ATCAGC" }
+#       2EP:  { barcodes: "CGACTA" }
+#       4A:   { barcodes: "CGTCAT" }
+#       4P:   { barcodes: "CTCGAT" }
+#       4EA:  { barcodes: "TAGCAC" }
+#       4EP:  { barcodes: "TCTAGC" }
+#       6A:   { barcodes: "CACGTA" }
+#       6P:   { barcodes: "ATGCTC" }
+#       6MA:  { barcodes: "GCTACA" }
+#       6MP:  { barcodes: "GCATCT" }
+#       6EA:  { barcodes: "ACATGC" }
+#       6EP:  { barcodes: "ACGTCA" }
+#       8A:   { barcodes: "CATGCT" }
+#       8P:   { barcodes: "CTAGTC" }
+#       8MA:  { barcodes: "TGCATC" }
+#       8MP:  { barcodes: "CATCTG" }
+#       8EA:  { barcodes: "CAGATC" }
+#       8EP:  { barcodes: "AGCACT" }
+#       10A:  { barcodes: "ACTCGA" }
+#       10P:  { barcodes: "TCACGT" }
+#       10L:  { barcodes: "GTCTAC" }
+#       10R:  { barcodes: "TCTCAG" }
+#       10MA: { barcodes: "TCAGAC" }
+#       10MP: { barcodes: "GACTCA" }
+#       10EA: { barcodes: "CACAGT" }
+#       10EP: { barcodes: "ACACTG" }
+#       12A:  { barcodes: "GCAGTA" }
+#       12P:  { barcodes: "GCTGAT" }
+#       12L:  { barcodes: "TAGTCG" }
+#       12R:  { barcodes: "ATGACG" }
+#       12MA: { barcodes: "CGATGT" }
+#       12MP: { barcodes: "AGATCG" }
+#       12EA: { barcodes: "TACGAG" }
+#       12EP: { barcodes: "CGTAGA" }
+#       15A:  { barcodes: "TGTACG" }
+#       15P:  { barcodes: "ATCGTG" }
+#       15L:  { barcodes: "GTGCAT" }
+#       15R:  { barcodes: "GAGCTA" }
+#       15MA: { barcodes: "GCCTGA" }
+#       15MP: { barcodes: "ACTTCG" }
+#       15EA: { barcodes: "TAGATC" }
+#       15EP: { barcodes: "AATCGC" }
+#
+#  GEO_SLAM_20250420_vasaseq:
+#    parameters:
+#      control_pattern: "Pnc"
+#      control_samples: []
+#      barcode_pattern: "C6U8T32N2"
+#      adapter_sequence: "CTGTCTCTTATACACATCT"
+#      external_controls: 
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#    fastqs:
+#      fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250420_Lib_VASA/20250420_Lib_VASA_raw_1.fq.gz
+#      fastq_r1_md5:
+#      fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250420_Lib_VASA/20250420_Lib_VASA_raw_2.fq.gz
+#      fastq_r2_md5:
+#    n_samples: 6
+#    samples:
+#      14A:  { barcodes: "CTCACA" }
+#      14P:  { barcodes: "TACTGC" }
+#      14MA: { barcodes: "ATCAGC" }
+#      14MP: { barcodes: "CGACTA" }
+#      14EA: { barcodes: "CGTCAT" }
+#      14EP: { barcodes: "CTCGAT" }
+#
+#  GEO_SLAM_20250419_smartseq2:
+#    parameters:
+#      control_pattern: "Pnc"
+#      control_samples: ["17Pnc"]
+#      barcode_pattern: "A18C6U8T32N2"
+#      adapter_sequence: "CTGTCTCTTATACACATCT"
+#      external_controls: 
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#    fastqs:
+#      fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250419_Lib_Smart/20250419_Lib_Smart_raw_1.fq.gz
+#      fastq_r1_md5:
+#      fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250419_Lib_Smart/20250419_Lib_Smart_raw_2.fq.gz
+#      fastq_r2_md5:
+#    n_samples: 7
+#    samples:
+#      13A:   { barcodes: "CTCACA" }
+#      13P:   { barcodes: "TACTGC" }
+#      13MA:  { barcodes: "ATCAGC" }
+#      13MP:  { barcodes: "CGACTA" }
+#      13EA:  { barcodes: "CGTCAT" }
+#      13EP:  { barcodes: "CTCGAT" }
+#      17Pnc: { barcodes: "TAGCAC" }
+#
+#   GEO_SLAM_20250420_vasaseq:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250420_Lib_VASA/20250420_Lib_VASA_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250420_Lib_VASA/20250420_Lib_VASA_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 6
+#     samples:
+#       14A:  { barcodes: "CTCACA" }
+#       14P:  { barcodes: "TACTGC" }
+#       14MA: { barcodes: "ATCAGC" }
+#       14MP: { barcodes: "CGACTA" }
+#       14EA: { barcodes: "CGTCAT" }
+#       14EP: { barcodes: "CTCGAT" }
+#  
+#   GEO_SLAM_20250419_smartseq2:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: ["17Pnc"]
+#       barcode_pattern: "A18C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250419_Lib_Smart/20250419_Lib_Smart_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250428_GEO_SLAM/00.mergeRawFq/20250419_Lib_Smart/20250419_Lib_Smart_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 7
+#     samples:
+#       13A:   { barcodes: "CTCACA" }
+#       13P:   { barcodes: "TACTGC" }
+#       13MA:  { barcodes: "ATCAGC" }
+#       13MP:  { barcodes: "CGACTA" }
+#       13EA:  { barcodes: "CGTCAT" }
+#       13EP:  { barcodes: "CTCGAT" }
+#       17Pnc: { barcodes: "TAGCAC" }
+# 
+#   GEO_SLAM_20250525_Lib1:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib1/20250519_Lib1_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib1/20250519_Lib1_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 10
+#     samples:
+#       2A:  { barcodes: "CTCACA" }
+#       2P:  { barcodes: "TACTGC" }
+#       4A:  { barcodes: "ATCAGC" }
+#       4P:  { barcodes: "CGACTA" }
+#       6A:  { barcodes: "CGTCAT" }
+#       6P:  { barcodes: "CTCGAT" }
+#       6EA: { barcodes: "TAGCAC" }
+#       6EP: { barcodes: "TCTAGC" }
+#       8A:  { barcodes: "CACGTA" }
+#       8P:  { barcodes: "ATGCTC" }
+#
+#   GEO_SLAM_20250525_Lib2:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib2/20250519_Lib2_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib2/20250519_Lib2_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 10
+#     samples:
+#       8EA:  { barcodes: "GCTACA" }
+#       8EP:  { barcodes: "GCATCT" }
+#       10A:  { barcodes: "ACATGC" }
+#       10P:  { barcodes: "ACGTCA" }
+#       10MA: { barcodes: "CATGCT" }
+#       10MP: { barcodes: "CTAGTC" }
+#       10EA: { barcodes: "TGCATC" }
+#       10EP: { barcodes: "CATCTG" }
+#       13A:  { barcodes: "CAGATC" }
+#       13P:  { barcodes: "AGCACT" }
+#
+#   GEO_SLAM_20250525_Lib3:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib3/20250519_Lib3_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250525_GEO_SLAM/00.mergeRawFq/20250519_Lib3/20250519_Lib3_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 10
+#     samples:
+#       13MA: { barcodes: "ACTCGA" }
+#       13MP: { barcodes: "TCACGT" }
+#       13EA: { barcodes: "GTCTAC" }
+#       13EP: { barcodes: "TCTCAG" }
+#       15A:  { barcodes: "TCAGAC" }
+#       15P:  { barcodes: "GACTCA" }
+#       15MA: { barcodes: "CACAGT" }
+#       15MP: { barcodes: "ACACTG" }
+#       15EA: { barcodes: "GCAGTA" }
+#       15EP: { barcodes: "GCTGAT" }
+#
+#   GEO_SLAM_20250621:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "A18C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250621_GEO_SLAM/00.mergeRawFq/20250618_Lib/20250618_Lib_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2: /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/20250621_GEO_SLAM/00.mergeRawFq/20250618_Lib/20250618_Lib_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 6
+#     samples:
+#       5A:  { barcodes: "CTCACA" }
+#       5P:  { barcodes: "TACTGC" }
+#       5MA: { barcodes: "ATCAGC" }
+#       5MP: { barcodes: "CGACTA" }
+#       5EA: { barcodes: "CGTCAT" }
+#       5EP: { barcodes: "CTCGAT" }
+# 
+#   GEO_SLAM_20250810_lib2:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_2/250810_Lib_-2_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_2/250810_Lib_-2_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 14
+#     samples:
+#       16_17A: { barcodes: "TAGCAC" }
+#       16_17P: { barcodes: "TCTAGC" }
+#       16_17MA: { barcodes: "CACGTA" }
+#       16_17MP: { barcodes: "ATGCTC" }
+#       16_17EA: { barcodes: "GCTACA" }
+#       16_17EP: { barcodes: "GCATCT" }
+# 
+#   GEO_SLAM_20250810_lib15:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_15/250810_Lib_15_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_15/250810_Lib_15_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 14
+#     samples:
+#       15A: { barcodes: "CTCACA" }
+#       15P: { barcodes: "TACTGC" }
+#       15MA: { barcodes: "ATCAGC" }
+#       15MP: { barcodes: "CGACTA" }
+#       15EA: { barcodes: "CGTCAT" }
+#       15EP: { barcodes: "CTCGAT" }
+# 
+#   GEO_SLAM_20250810_cell:
+#     parameters:
+#       control_pattern: "Pnc"
+#       control_samples: []
+#       barcode_pattern: "C6U8T32N2"
+#       adapter_sequence: "CTGTCTCTTATACACATCT"
+#       external_controls: 
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+#         - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+#     fastqs:
+#       fastq_r1:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_cell/250810_Lib_cell_raw_1.fq.gz
+#       fastq_r1_md5:
+#       fastq_r2:
+#         - /home/zzhang/Documents/projects/wp_vasaseq/inputs/geo_slam/GEO_SLAM_20250814/00.mergeRawFq/250810_Lib_cell/250810_Lib_cell_raw_2.fq.gz
+#       fastq_r2_md5:
+#     n_samples: 14
+#     samples:
+#       DMSO: { barcodes: "ACATGC" }
+#       dTAG: { barcodes: "ACGTCA" }
+  GEO_SLAM_20250908_lib:
+    parameters:
+      control_pattern: "Pnc"
+      control_samples: []
+      barcode_pattern: "C6U8T32N2"
+      adapter_sequence: "CTGTCTCTTATACACATCT"
+      external_controls: 
+        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14EPnc.corrected.cit
+        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14MPnc.corrected.cit
+        - /home/zzhang/Documents/projects/wp_vasaseq/outputs/analysis/preprocessing/geo_slam/GEO_VASA_SLAM_240717/cit_files/per_sample/14Pnc.corrected.cit
+    fastqs:
+      fastq_r1:
+        - /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250912_GEO_SLAM/00.mergeRawFq/20250908_Lib/20250908_Lib_raw_1.fq.gz
+      fastq_r1_md5:
+      fastq_r2:
+        - /mnt/backup/Documents/projects/wp_vasaseq/inputs/geo_slam/20250912_GEO_SLAM/00.mergeRawFq/20250908_Lib/20250908_Lib_raw_2.fq.gz
+      fastq_r2_md5:
+    n_samples:
+    samples:
+      11A:  { barcodes: "CTCACA" }
+      11P:  { barcodes: "TACTGC" }
+      11MA: { barcodes: "ATCAGC" }
+      11MP: { barcodes: "CGACTA" }
+      11EA: { barcodes: "CGTCAT" }
+      11EP: { barcodes: "CTCGAT" }
+    descriptions:
+      "Lib：文库结构和VASA-seq相同，采样：第11层A~EP，6个区域，6个样品； 建库方案：采用不片段化，不加A的VASA-seq（即CEL-seq2），使用切胶回收方式进行纯化；"

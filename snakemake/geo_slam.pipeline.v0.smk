@@ -61,64 +61,64 @@ batch_list = [
 # batches = '240612_Lib_28region' # DONE
 # batches = "240703_Lib_32region" # DONE
 # batches = "240717_Lib_28region" # DONE
-batches = "240710_Lib_37region" # Done
-fastq_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/fastq'
+# batches = "240710_Lib_37region" # Done
+fastq_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/fastq'
 if batches == '240409_Lib_embryo':
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240409_Lib_embryo_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240409_Lib_embryo_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '20240321_Lib_Embryo':
   mp_r1 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_Embryo_raw_1.fq.gz'
   mp_r2 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_Embryo_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '20240321_Lib_20ng':
   mp_r1 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_20ng_raw_1.fq.gz'
   mp_r2 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_20ng_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '20240321_Lib_100cells':
   mp_r1 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_100cells_raw_1.fq.gz'
   mp_r2 = fastq_dir / '20240321_null_1/00.mergeRawFq' / batches / '20240321_Lib_100cells_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '240612_Lib_28region':
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240612_Lib_28region_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240612_Lib_28region_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '240612_Lib_28region_purified':
   mp_r1 = fastq_dir / '240612_Lib_28region/00.mergeRawFq' / batches / '240612_Lib_28region_raw_1_p.fq.gz'
   mp_r2 = fastq_dir / '240612_Lib_28region/00.mergeRawFq' / batches / '240612_Lib_28region_raw_2_p.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '240620_Lib_38region':
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240620_Lib_38region_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240620_Lib_38region_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == '240703_Lib_32region':
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240703_Lib_32region_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240703_Lib_32region_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == "240710_Lib_37region":
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240710_Lib_37region_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240710_Lib_37region_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == "240717_Lib_28region":
   mp_r1 = fastq_dir / batches / '00.mergeRawFq' / batches / '240717_Lib_28region_raw_1.fq.gz'
   mp_r2 = fastq_dir / batches / '00.mergeRawFq' / batches / '240717_Lib_28region_raw_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 elif batches == "E200022670-IAA_mix":
   mp_r1 = fastq_dir / batches / 'IAA-mix_IAA-mix_1.fq.gz'
   mp_r2 = fastq_dir / batches / 'IAA-mix_IAA-mix_2.fq.gz'
-  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/barcodes' / (batches + '.sample_barcode.txt')
+  sample_info_tab = project_dir / 'outputs/analysis/preprocessing/geo_seq/barcodes' / (batches + '.sample_barcode.txt')
 else:
   raise ValueError(f"Unknown batche {batches}")
 
 
 # Outputs
-dm_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/demultiplexing' / batches 
-qc_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/quality_control' / batches 
-ra_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/read_alignments' / batches 
-qt_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/quantification' / batches 
-nr_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/nascent_rna' / batches 
-mq_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/alignment_statistics' / batches 
-vc_dir = project_dir / 'outputs/analysis/preprocessing/geo_vasa_slam/velocity_counts' / batches 
+dm_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/demultiplexing' / batches 
+qc_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/quality_control' / batches 
+ra_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/read_alignments' / batches 
+qt_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/quantification' / batches 
+nr_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/nascent_rna' / batches 
+mq_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/alignment_statistics' / batches 
+vc_dir = project_dir / 'outputs/analysis/preprocessing/geo_seq/velocity_counts' / batches 
 ct_dir = project_dir / 'outputs/analysis/preprocessing/no4sU_control'
 
 # Created wildcards
